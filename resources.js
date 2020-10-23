@@ -1,25 +1,76 @@
+import { CHICKEN, COW, EGGS, GOLDS, MILKS, WHEAT, WHEATS } from "./consts.js";
+
 export class Resources {
+    /**
+     * Manipulating and displaying the game's resources
+     * @param resources An object with resources and their default values. For example: {golds: 100}
+     */
     constructor(resources) {
         this.resources = resources;
     }
-    _createResourceName(name) {
+    /**
+     * Collect the name and value of resources
+     * @param {String} name 
+     */
+    _getResourceName(name) {
         return `${name} : ${this.resources[name]}`;
     }
-    _createResourceItem(name) {
+    /**
+     * Sell resources for gold
+     * @param {String} name The name of the resource for sale
+     */
+    sellResources = (name) => {
+        const currentResourceValue = this.resources[name];
+        this.resources[name] = 0;
+        this.increaseResource(GOLDS, currentResourceValue);
+        this.updateResource(name);
+    }
+    /**
+     * Create an HTML resource element
+     * @param {String} name  resource name
+     * @returns HTML resource element
+     */
+    _getResourceItem(name) {
         const item = document.createElement('div');
-        const itemName = document.createTextNode(this._createResourceName(name));
+        const itemName = document.createTextNode(this._getResourceName(name));
         item.appendChild(itemName);
         item.setAttribute("id", `resource-${name}`);
+        if (name === EGGS || name === MILKS) {
+            item.addEventListener('click', () => this.sellResources(name));
+        }
         return item;
     }
-    renderResourceStats(element) {
+    /**
+     * Render resources
+     * @param {HTMLElement} locationPoint Where to render resources
+     */
+    render(locationPoint) {
         Object.keys(this.resources).forEach(name => {
-            element.appendChild(this._createResourceItem(name));
+            locationPoint.appendChild(this._getResourceItem(name));
         });
     }
-    increase(name, value) {
+    /**
+     * See the current state of the resource
+     * @param {String} name Resource name
+     */
+    updateResource(name) {
         const resource = document.getElementById(`resource-${name}`);
-        this.resources[name] += value;
-        resource.innerHTML = this._createResourceName(name);
+        resource.innerHTML = this._getResourceName(name);
+    }
+    /**
+     * Increase the resource by the specified value
+     * @param {String} name Resource name
+     * @param {Number} value What's the value of increasing your resource
+     */
+    increaseResource(name, value) {
+        const сonverter = {
+            [WHEAT]: WHEATS,
+            [CHICKEN]: EGGS,
+            [COW]: MILKS,
+            [GOLDS]: GOLDS
+        }
+        const resourceName = сonverter[name];
+        this.resources[resourceName] += value;
+        this.updateResource(resourceName);
     }
 }

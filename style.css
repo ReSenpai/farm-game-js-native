@@ -39,6 +39,24 @@ body {
     cursor: pointer;
 }
 
+.plantingMenu {
+    background-size: contain;
+    cursor: pointer;
+    border: 2px transparent solid;
+    border-radius: 5px;
+    width: 100px;
+    height: 100px;
+    margin: 30px;
+}
+.plantingMenu:hover {
+    opacity:0.6;
+    background-color:#000;
+}
+
+.plantingMenu-active {
+    border: 2px green solid;
+}
+
 .emptyCell {
     background-image: url('./assets/grass.png');
 }
