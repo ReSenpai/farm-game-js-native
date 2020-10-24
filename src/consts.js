@@ -11,8 +11,6 @@ export const COW = 'cow';
 export const DONE = 'done';
 export const EMPTY = 'empty';
 export const PREPARING = 'preparing';
-export const HUNGER = 'hunger';
-export const SATIETY = 'satiety';
 /**
  * Resources
  */
