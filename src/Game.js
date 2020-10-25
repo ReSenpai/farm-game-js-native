@@ -2,7 +2,7 @@ import { GameBoard } from './GameBoard.js';
 import { Resources } from './Resources.js';
 import { Animal, Plants } from './Items.js';
 import { PlantingMenu } from './PlantingMenu.js';
-import { WHEAT, COW, EMPTY_CELL, CHICKEN, DONE } from './consts.js';
+import { WHEAT, COW, EMPTY_CELL, CHICKEN } from './consts.js';
 import { GlobalState } from './GlobalState.js';
 
 const plantingMenuSource = {
