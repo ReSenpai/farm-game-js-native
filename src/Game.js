@@ -6,7 +6,6 @@ import { WHEAT, COW, EMPTY_CELL, CHICKEN, DONE } from './consts.js';
 import { GlobalState } from './GlobalState.js';
 
 const plantingMenuSource = {
-    [EMPTY_CELL]: 0,
     [WHEAT] : 10,
     [CHICKEN]: 30,
     [COW] : 50
@@ -72,12 +71,13 @@ class Game {
         
         if (currentItem !== EMPTY_CELL) {
             this.collectResources(id);
-            if (this.isAnimal(currentMenuOption)) {
-                if (hunger) {
-                    this[currentItem].eating(currentCell, this.store, this.resources);
-                    return;
-                }
+            if (hunger) {
+                this[currentItem].eating(currentCell, this.store, this.resources);
+                return;
             }
+            // if (this.isAnimal(currentMenuOption)) {
+                
+            // }
             // if (status === DONE) {   
             //     this.collectResources(id);
             //     this[currentItem].plantOnCell(currentCell, this.store);
