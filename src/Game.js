@@ -89,7 +89,6 @@ class Game {
         this.store.setCurrentItem(id, currentMenuOption);
 
         if (this.isAnimal(currentMenuOption)) {
-            console.log('here');
             currentCell.children[3].innerHTML = '🍽️';
             this.store.setHunger(id, true);
             return;
@@ -103,7 +102,6 @@ class Game {
     renderGameBoard() {
         this.gameBoard.render(this.gameCore);
         this.store.setCells(this.gameBoard.getCellsState());
-        console.log(this.store.cells);
     }
     /**
      * Start the game
