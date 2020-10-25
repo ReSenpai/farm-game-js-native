@@ -39,16 +39,21 @@ export class Resources {
         const wrapper = document.createElement('div');
         const icon = document.createElement('div');
         const value = document.createElement('span');
+        const button = document.createElement('button');
 
         icon.classList.add('resource-icon', name);
         value.innerHTML = this._getResourceValue(name);
         wrapper.setAttribute("id", `resource-${name}`);
+        button.innerHTML = 'Sell';
 
         wrapper.appendChild(icon);
         wrapper.appendChild(value);
 
         console.log(this.isAnimalResource(name));
-        this.isAnimalResource(name) && wrapper.addEventListener('click', () => this.sellResources(name));
+        if (this.isAnimalResource(name)) {
+            button.addEventListener('click', () => this.sellResources(name));
+            wrapper.appendChild(button);
+        }
 
         wrapper.classList.add('resources-wrapper');
         return wrapper;

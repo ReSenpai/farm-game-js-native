@@ -75,13 +75,6 @@ class Game {
                 this[currentItem].eating(currentCell, this.store, this.resources);
                 return;
             }
-            // if (this.isAnimal(currentMenuOption)) {
-                
-            // }
-            // if (status === DONE) {   
-            //     this.collectResources(id);
-            //     this[currentItem].plantOnCell(currentCell, this.store);
-            // }
             return;
         }
 
