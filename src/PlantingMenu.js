@@ -31,7 +31,6 @@ export class PlantingMenu {
         this.currentItem = e.target.id.replace(/^menu-/i, '');
         const icon = document.getElementById(e.target.id);
         icon.classList.add('plantingMenu-active');
-        console.log(this.currentItem);
     }
     /**
      * Collect a menu item

@@ -49,7 +49,6 @@ export class Resources {
         wrapper.appendChild(icon);
         wrapper.appendChild(value);
 
-        console.log(this.isAnimalResource(name));
         if (this.isAnimalResource(name)) {
             button.addEventListener('click', () => this.sellResources(name));
             wrapper.appendChild(button);
