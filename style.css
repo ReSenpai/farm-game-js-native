@@ -6,6 +6,11 @@ body {
     align-items: center;
     margin: 0;
     background-color: black;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .container {
@@ -22,8 +27,7 @@ body {
 }
 
 #game-board {
-    background-color: #fafafa;
-    border: 1px gray solid;
+    background-color: black;
     width: 90vmin;
     height: 90vmin;
     display: grid;
@@ -33,20 +37,29 @@ body {
 }
 
 .cell {
-    width: 98%;
-    height: 98%;
+    width: 99%;
+    height: 99%;
     background-size: contain;
     cursor: pointer;
+    border: 1px black solid;
+    transition: .15s;
+    display: flex;
+    flex-direction: column;
+}
+.cell:hover {
+    opacity:0.8;
+    background-color:#000;
 }
 
 .plantingMenu {
     background-size: contain;
     cursor: pointer;
-    border: 2px transparent solid;
+    border: 5px transparent solid;
     border-radius: 5px;
     width: 100px;
     height: 100px;
     margin: 30px;
+    transition: .15s;
 }
 .plantingMenu:hover {
     opacity:0.6;
@@ -54,7 +67,7 @@ body {
 }
 
 .plantingMenu-active {
-    border: 2px green solid;
+    border: 5px black solid;
 }
 
 .emptyCell {
@@ -71,4 +84,33 @@ body {
 
 .chicken {
     background-image: url('./assets/chicken.gif');
+}
+
+.resources-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 5px;
+    max-width: 100px;
+}
+/*
+    Resource icons
+*/
+.resource-icon {
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    border-radius: 5px;
+}
+.wheats {
+    background-image: url('./assets/wheat-icon.png');
+}
+.eggs {
+    background-image: url('./assets/egg-icon.png');
+}
+.milks {
+    background-image: url('./assets/milk-icon.png');
+}
+.golds {
+    background-image: url('./assets/gold.png');
 }

@@ -20,7 +20,8 @@ export class GameBoard {
             id: key,
             currentItem: EMPTY_CELL,
             status: EMPTY,
-            hunger: false
+            hunger: false,
+            resource: 0
         }
     }
     /**
@@ -41,9 +42,11 @@ export class GameBoard {
 
         cell.classList.add('cell');
         cell.classList.add(EMPTY_CELL);
-        [timerElement(), timerElement(), timerElement()].forEach(item => {
-            cell.appendChild(item);
-        });
+
+        for (let index = 0; index < 4; index++) {
+            cell.appendChild(timerElement());  
+        }
+        
         cell.setAttribute("id", cellId);
         cell.onclick = () => event(cellId);
 

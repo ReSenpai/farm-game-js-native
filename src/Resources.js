@@ -9,11 +9,11 @@ export class Resources {
         this.resources = resources;
     }
     /**
-     * Collect the name and value of resources
+     * Collect the value of resources
      * @param {String} name 
      */
-    _getResourceName(name) {
-        return `${name} : ${this.resources[name]}`;
+    _getResourceValue(name) {
+        return ` : ${this.resources[name]}`;
     }
     /**
      * Sell resources for gold
@@ -26,19 +26,32 @@ export class Resources {
         this.updateResource(name);
     }
     /**
+     * Are these animal resources?
+     * @param {String} name resource name
+     */
+    isAnimalResource = (name) => (name === EGGS || name === MILKS) ? true : false;
+    /**
      * Create an HTML resource element
      * @param {String} name  resource name
      * @returns HTML resource element
      */
-    _getResourceItem(name) {
-        const item = document.createElement('div');
-        const itemName = document.createTextNode(this._getResourceName(name));
-        item.appendChild(itemName);
-        item.setAttribute("id", `resource-${name}`);
-        if (name === EGGS || name === MILKS) {
-            item.addEventListener('click', () => this.sellResources(name));
-        }
-        return item;
+    _getResourceElement(name) {
+        const wrapper = document.createElement('div');
+        const icon = document.createElement('div');
+        const value = document.createElement('span');
+
+        icon.classList.add('resource-icon', name);
+        value.innerHTML = this._getResourceValue(name);
+        wrapper.setAttribute("id", `resource-${name}`);
+
+        wrapper.appendChild(icon);
+        wrapper.appendChild(value);
+
+        console.log(this.isAnimalResource(name));
+        this.isAnimalResource(name) && wrapper.addEventListener('click', () => this.sellResources(name));
+
+        wrapper.classList.add('resources-wrapper');
+        return wrapper;
     }
     /**
      * Render resources
@@ -46,7 +59,7 @@ export class Resources {
      */
     render(locationPoint) {
         Object.keys(this.resources).forEach(name => {
-            locationPoint.appendChild(this._getResourceItem(name));
+            locationPoint.appendChild(this._getResourceElement(name));
         });
     }
     /**
@@ -54,8 +67,8 @@ export class Resources {
      * @param {String} name Resource name
      */
     updateResource(name) {
-        const resource = document.getElementById(`resource-${name}`);
-        resource.innerHTML = this._getResourceName(name);
+        const resource = document.querySelector(`#resource-${name} > span`);
+        resource.innerHTML = this._getResourceValue(name);
     }
     /**
      * Increase the resource by the specified value
@@ -73,4 +86,18 @@ export class Resources {
         this.resources[resourceName] += value;
         this.updateResource(resourceName);
     }
+    /**
+     * Reduce resource value
+     * @param {String} name Resource name
+     * @param {Number} value Resource value
+     */
+    reduceResource(name, value) {
+        this.resources[name] -= value;
+        this.updateResource(name);
+    }
+    /**
+     * Get resource value
+     * @param {String} name Resource name
+     */
+    getResource = (name) => this.resources[name];
 }

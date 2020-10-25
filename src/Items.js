@@ -1,4 +1,4 @@
-import { DONE, PREPARING } from "./consts.js";
+import { CHICKEN, COW, DONE, PREPARING, WHEAT, WHEATS } from "./consts.js";
 
 class BaseItem {
     /**
@@ -18,21 +18,39 @@ class BaseItem {
         return document.getElementById(cellId); 
     }
     /**
+     * Get a resource icon
+     * @param {String} item item name
+     */
+    getResourceIcon(item) {
+        const сonverter = {
+            [WHEAT]: '🌾',
+            [CHICKEN]: '🥚',
+            [COW]: '🥛',
+        }
+        return сonverter[item];
+    }
+    /**
      * Place an item on a cell
      * @param {HTMLElement} element Where the item will be placed
-     * @param setStatus Callback function to set status
+     * @param store State object
      */
-    plantOnCell(element, setStatus) {
+    plantOnCell(element, store) {
         let [icon, readyTime, foodTime] = element.children;
+        const id = element.id;
+        const currentItem = store.cells[id].currentItem;
+        const resourceIcon = this.getResourceIcon(currentItem);
         const timer = this._showTimerToReady(readyTime);
 
-        setStatus(element.id, PREPARING);
-        icon.innerHTML = '';
+        store.setStatus(id, PREPARING);
         this.timerToReady().then(() => {
+            let isHunger = store.getHungerStatus(id);
             clearInterval(timer);
-            icon.innerHTML = '✅';
             readyTime.innerHTML = '';
-            setStatus(element.id, DONE);
+            store.setStatus(id, DONE);
+            store.increaseResource(id, 1);
+            icon.innerHTML = `${resourceIcon} ${store.getResource(id)}`;
+
+            !isHunger && this.plantOnCell(element,store);
         });
     }
     /**
@@ -42,9 +60,10 @@ class BaseItem {
      */
     _showTimerToReady(readyTime) {
         let counter = 0;
+        readyTime.innerHTML = `⏱️ ${this.readyTime}`;
         return setInterval(() => {
             counter++;
-            readyTime.innerHTML = `🌽 ${this.readyTime - counter}`;
+            readyTime.innerHTML = `⏱️ ${this.readyTime - counter}`;
         }, 1000);
     }
     /**
@@ -85,6 +104,7 @@ export class Animal extends BaseItem {
      */
     _showEndOfMealTimer(foodTimeElement) {
         let counter = 0;
+        foodTimeElement.innerHTML = `🥣 ${this.foodTime}`;
         return setInterval(() => {
             counter++;
             foodTimeElement.innerHTML = `🥣 ${this.foodTime - counter}`;
@@ -93,21 +113,29 @@ export class Animal extends BaseItem {
     /**
      * Time to end meals
      */
-    endOfMealTimer = () => this._getTimer(this.foodTime);
+    endOfMealTimer = () => this._getTimer(this.foodTime - 1);
     /**
      * Feed the animal
      * @param {HTMLElement} element 
-     * @param setHunger Callback function to set hunger
+     * @param store State object
      */
-    eating(element, setHunger) {
-        let [icon, readyTime, foodTime] = element.children;
+    eating(element, store, resources) {
+        let [icon, readyTime, foodTime, hungerIcon] = element.children;
+        const wheats = resources.getResource(WHEATS);
+        if (wheats <= 0) return;
+        
+        resources.reduceResource(WHEATS, 1);
+
         const timer = this._showEndOfMealTimer(foodTime);
-        setHunger(element.id, false);
-        icon.innerHTML = '';
+        
+        store.setHunger(element.id, false);
+        this.plantOnCell(element, store);
+        hungerIcon.innerHTML = '';
         this.endOfMealTimer().then(() => {
             clearInterval(timer);
-            icon.innerHTML = '🥣';
-            setHunger(element.id, true);
+            hungerIcon.innerHTML = '🍽️';
+            foodTime.innerHTML = '';
+            store.setHunger(element.id, true);
         })
     }
 }

@@ -46,47 +46,56 @@ class Game {
      * Сollect resources from the cell
      * @param {String} name Resource name
      */
-    collectResources(name) {
-        this.resources.increaseResource(name,1);
+    collectResources(cellId) {
+        const iconElement = document.getElementById(cellId).children[0];
+        const itemName = this.store.getCurrentItem(cellId);
+        const resource = this.store.getResource(cellId);
+        if (resource > 0) {
+            this.resources.increaseResource(itemName, resource);
+            this.store.resetResource(cellId);
+            iconElement.innerHTML = '';
+        }
     }
     /**
      * Check animal on cell
      * @param {String} item current menu option
      */
-    animalCheck = (item) => (item === CHICKEN || item === COW ) ? true : false;
+    isAnimal = (item) => (item === CHICKEN || item === COW ) ? true : false;
     /**
      * Game logic
      * @param {String} cellId Cell id
      */
     gameCore = (cellId) => {
-        console.log(cellId)
         const currentCell = document.getElementById(cellId);
         const {currentItem, status, id, hunger} = this.store.cells[cellId];
         const currentMenuOption = this.plantingMenu.currentItem;
         
         if (currentItem !== EMPTY_CELL) {
-            if (this.animalCheck(currentMenuOption)) {
+            this.collectResources(id);
+            if (this.isAnimal(currentMenuOption)) {
                 if (hunger) {
-                    this[currentItem].eating(currentCell, this.store.setHunger);
+                    this[currentItem].eating(currentCell, this.store, this.resources);
                     return;
                 }
             }
-            if (status === DONE) {   
-                this.collectResources(currentItem);
-                this[currentItem].plantOnCell(currentCell, this.store.setStatus);
-            }
+            // if (status === DONE) {   
+            //     this.collectResources(id);
+            //     this[currentItem].plantOnCell(currentCell, this.store);
+            // }
             return;
         }
 
         currentCell.classList.add(currentMenuOption);
         this.store.setCurrentItem(id, currentMenuOption);
 
-        if (this.animalCheck(currentMenuOption)) {
-            currentCell.children[0].innerHTML = '🥣';
+        if (this.isAnimal(currentMenuOption)) {
+            console.log('here');
+            currentCell.children[3].innerHTML = '🍽️';
             this.store.setHunger(id, true);
+            return;
         }
 
-        this[currentMenuOption].plantOnCell(currentCell, this.store.setStatus);
+        this[currentMenuOption].plantOnCell(currentCell, this.store);
     }
     /**
      * Render game board
