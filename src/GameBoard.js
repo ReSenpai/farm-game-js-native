@@ -41,7 +41,7 @@ export class GameBoard {
         const cellId = `cell${index + 1}`;
 
         cell.classList.add('cell');
-        cell.classList.add(EMPTY_CELL);
+        cell.classList.add(EMPTY_CELL); // delete ?
 
         for (let index = 0; index < 4; index++) {
             cell.appendChild(timerElement());  
