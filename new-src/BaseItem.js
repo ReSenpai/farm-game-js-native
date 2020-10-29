@@ -1,8 +1,17 @@
 export class BaseItem {
+    /**
+     * Item Behaviours
+     * @param {string} name Item name
+     * @param {number} readyTime Time to get resources
+     * @param {HTMLElement} element 
+     */
     constructor(name, readyTime, element) {
         this.name = name;
         this.readyTime = readyTime;
         this.element = element;
+        this.resourceCount = 0;
+        this.timeoutId = null;
+        this.needTimer = true;
         this.resourceIcon = this._getSpan();
         this.hungerIcon = this._getSpan();
         this.readyTimeIcon = this._getSpan();
@@ -24,6 +33,7 @@ export class BaseItem {
         let counter = 0;
         this.readyTimeIcon.innerHTML = `⏱️ ${this.readyTime}`;
         return setInterval(() => {
+            console.log('timer')
             if (this.readyTime - counter < 1) clearInterval(this.showTimerToReady);
             counter++;
             this.readyTimeIcon.innerHTML = `⏱️ ${this.readyTime - counter}`;
@@ -34,16 +44,15 @@ export class BaseItem {
         const { resourceIcon, hungerIcon, readyTimeIcon, foodTimeIcon } = this;
         this.element.append(resourceIcon, hungerIcon, readyTimeIcon, foodTimeIcon);
     }
-
+    /**
+     * Remove ?
+     */
     removeSpans() {
-        this.element.innerHTML = '';
+        this.element.querySelectorAll('span').forEach(span => span.remove());
     }
 
-    deleteItem() {
-        clearInterval(this.showTimerToReady);
-        this.resourceIcon = null;
-        this.hungerIcon = null;
-        this.readyTimeIcon = null;
-        this.foodTimeIcon = null;
+    clearTimers = () => {
+        clearInterval(this.timeoutId);
+        this.needTimer = false;
     }
 }
