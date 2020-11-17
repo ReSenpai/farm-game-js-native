@@ -1,44 +1,53 @@
+import { CHICKEN_RUS, COW_RUS, WHEAT_RUS } from "./consts.js";
+
 export class Menu {
     constructor(events) {
-        this.modal = null;
-        this.modalContainer = null;
-        this.menuText = null;
-        this.wheat = null;
-        this.deletePlant = null;
+        this.modal = this.getElement('div', 'modal');
+        this.modalOverlay = this.getElement('div', 'modal-overlay');
+        this.modalContainer = this.getElement('div', 'modal-container');
+        this.menuText = this.getElement('p');
+        this.modalClose = this.getElement('button', 'modal-close');
+        this.menuButtonWrapper = this.getElement('div');
+        this.wheat = this.getElement('button');
+        this.chicken = this.getElement('button');
+        this.cow = this.getElement('button');
+        this.deletePlant = this.getElement('button');
         this.events = events;
         this._createMenu();
     }
 
-    _createMenu() {
-        const modal = document.createElement('div');
-        const modalOverlay = document.createElement('div');
-        const modalContainer = document.createElement('div');
-        const modalText = document.createElement('p');
-        const modalClose = document.createElement('button');
-        const plant = document.createElement('button');
-        const deletePlant = document.createElement('button');
+    getElement(type, classname) {
+        const element = document.createElement(type);
+        classname && element.classList.add(classname);
+        return element;
+    }
 
-        modal.classList.add('modal');
-        modalOverlay.classList.add('modal-overlay');
-        modalContainer.classList.add('modal-container');
-        modalClose.classList.add('modal-close');
-        modalClose.innerHTML = '&#10005;';
-        modalOverlay.addEventListener('click', this.close.bind(this));
-        modalClose.addEventListener('click', this.close.bind(this));
-        plant.innerHTML = 'Пшеница';
-        deletePlant.innerHTML = 'Удалить';
-        plant.addEventListener('click', this.events.plantOnCell);
-        deletePlant.addEventListener('click', this.events.cleanCell);
+    collectItemMenu(arr) {
+        return arr.map(name => this.getElement(name, 'item-menu'));
+    }
 
-        this.menuText = modalText;
+    _createMenu() {  
+        this.modalClose.innerHTML = '&#10005;';
+        this.modalOverlay.addEventListener('click', this.close.bind(this));
+        this.modalClose.addEventListener('click', this.close.bind(this));
+        this.wheat.innerHTML = WHEAT_RUS;
+        this.chicken.innerHTML = CHICKEN_RUS;
+        this.cow.innerHTML = COW_RUS;
+        this.deletePlant.innerHTML = 'Удалить';
+        this.wheat.addEventListener('click', this.events.plantWheat);
+        this.chicken.addEventListener('click', this.events.placeAnimal(10, 30));
+        this.cow.addEventListener('click', this.events.placeAnimal(20, 20));
+        this.deletePlant.addEventListener('click', this.events.closeMenu);
 
-        modalContainer.append(modalText, modalClose, plant, deletePlant);
-        modal.append(modalOverlay, modalContainer);
 
-        this.modalContainer = modalContainer;
-        this.modal = modal;
-        this.wheat = plant;
-        this.deletePlant = deletePlant;
+        this.menuButtonWrapper.append(this.wheat, this.chicken, this.cow, this.deletePlant);
+        this.modalContainer.append(this.menuText, this.modalClose, this.menuButtonWrapper);
+        this.modal.append(this.modalOverlay, this.modalContainer);
+    }
+
+    setMenuText(value) {
+        console.log(this.menuText);
+        this.menuText.innerHTML = `Клетка номер ${value}`;
     }
 
     getMenu = () => this.modal;

@@ -10,7 +10,7 @@ class Game {
     createCellArray(size) {
         let array = [];
         for (let index = 0; index < size; index++) {
-            array.push(new Cell());
+            array.push(new Cell(index + 1));
         }
         return array;
     }

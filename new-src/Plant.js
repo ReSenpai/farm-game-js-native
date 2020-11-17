@@ -4,8 +4,6 @@ import { WHEAT } from "./consts.js";
 export class Plant extends BaseItem {
     constructor(name, readyTime, element) {
         super(name, readyTime, element);
-        this.timeoutId = null;
-        this.needTimer = true;
         this.setItem();
         this.plantToCell();
     }
@@ -33,10 +31,5 @@ export class Plant extends BaseItem {
             this.resourceIcon.innerHTML = `${resourceIcon} ${this.resourceCount}`;
             this.needTimer && this.plantToCell();
         })
-    }
-
-    clearTimers = () => {
-        clearInterval(this.timeoutId);
-        this.needTimer = false;
     }
 }
