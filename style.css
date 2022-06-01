@@ -26,7 +26,7 @@ body {
     min-width: 200px;
 }
 
-#game-board {
+.game-board {
     background-color: black;
     width: 90vmin;
     height: 90vmin;

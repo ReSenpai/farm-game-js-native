@@ -107,7 +107,7 @@ class Game {
 }
 
 
-const launchPoint = document.getElementById('game-board');
+const launchPoint = document.getElementById('root');
 const game = new Game(launchPoint);
 game.start();
 
