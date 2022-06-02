@@ -1,6 +1,5 @@
 import { GameBoard } from "../layouts/GameBoard.js";
-
-const BOARD_SIZE = 2;
+import { BOARD_SIZE } from "./config.js";
 
 const board = new GameBoard(BOARD_SIZE);
 const launchPoint = document.getElementById('root');

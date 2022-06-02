@@ -1,58 +1,68 @@
+import { actionType } from "../models/actions.js";
 import { cssClasses } from "../models/cssClasses.js";
+import { Plants } from "../items/Plants.js";
 
 export class Cell {
-    constructor() {
-        this.element = null;
-        this.currentItem = null;
-        this.growthTimer = null;
-        this._event = () => {};
-        this.createCell();
+  constructor() {
+    this.element = null;
+    this.currentItem = null;
+    this.globalTicker = 0;
+    this._actionType = actionType.clear;
+    this.createCell();
+  }
+
+  set actionType(type) {
+    this._actionType = type;
+  }
+
+  createCell = () => {
+    const cell = document.createElement("div");
+    cell.classList.add(cssClasses.CELL, cssClasses.EMPTY_CELL);
+    cell.onclick = () => this.handleClick();
+    this.element = cell;
+  };
+
+  handleClick = () => {
+    this._actionType =
+      this._actionType === actionType.clear
+        ? actionType.plant
+        : actionType.clear;
+
+    switch (this._actionType) {
+      case actionType.clear:
+        return this.clear();
+      case actionType.plant:
+        return this.plant();
+      default:
+        return;
     }
+  };
 
-    createCell = () => {
-        const cell = document.createElement('div');
-        const timers = this._getTimerElements(1)
-        const [growthTimer] = timers;
+  plant = () => {
+    this.currentItem = new Plants({
+      image: "../../assets/wheat.jpg",
+      name: "Пшеница",
+      growthTime: 20,
+      itemCount: 5,
+      resourceCost: 1,
+    });
+    this.element.style.backgroundImage = `url(${this.currentItem.image})`;
+    this.element.append(this.currentItem.timerElement);
+    this.currentItem.runGrowthTimer();
+  };
 
-        cell.classList.add(cssClasses.CELL, cssClasses.EMPTY_CELL);
-        cell.append(...timers);
+  clear = () => {
+    this.element.style.backgroundImage = `url('../../assets/grass.png')`;
+    this.element.removeChild(this.currentItem.timerElement);
+    this.currentItem.stopGrowthTimer();
+    this.currentItem = null;
+  };
 
-        cell.onclick = () => this._event();
+  setEvent = (event) => {
+    this._event = event;
+  };
 
-        this.growthTimer = growthTimer;
-        this.element = cell;
-    }
-
-    place = (item) => {
-        this.currentItem = item;
-        this.element.style.backgroundImage = `url(${item.image})`;
-    }
-
-    clear = () => {
-
-    }
-
-    setEvent = (event) => {
-        this._event = event;
-    }
-
-    startGameTick = () => {
-        if (!this.currentItem) {
-            return;
-        }
-
-        this.currentItem.makeGameTick();
-        this.growthTimer.textContent = this.currentItem.timeCounter;
-    }
-
-    _getTimerElements = (size) => {
-        const timerElement = () => document.createElement('span');
-        const result = [];
-
-        for (let index = 0; index < size; index++) {
-            result.push(timerElement())
-        }
-
-        return result;
-    }
-} 
+  startGameTick = () => {
+    this.globalTicker++;
+  };
+}
