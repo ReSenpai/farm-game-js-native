@@ -1,7 +1,12 @@
 import { Cell } from "./Cell.js";
 
 export class GameBoard {
-  constructor(size = 8, gameTick = 1) {
+  public size: number;
+  public gameTick: number;
+  public elements: HTMLDivElement[];
+  public cellsInstances: Cell[];
+
+  constructor(size: number = 8, gameTick: number = 1) {
     this.size = size;
     this.gameTick = gameTick;
     this.cellsInstances = [];
@@ -9,7 +14,7 @@ export class GameBoard {
     this.create();
   }
 
-  create = () => {
+  create = (): void => {
     for (let index = 0; index < this.size * this.size; index++) {
       const cell = new Cell();
       this.cellsInstances.push(cell);
@@ -17,7 +22,7 @@ export class GameBoard {
     }
   };
 
-  startGameTicker = () => {
+  startGameTicker = (): void => {
     setInterval(() => {
       for (const cell of this.cellsInstances) {
         cell.startGameTick();

@@ -1,0 +1,23 @@
+{
+  "name": "farm-game-js-native",
+  "version": "1.0.0",
+  "description": "![Архитектура](./assets/architecture.png)",
+  "main": "index.js",
+  "scripts": {
+    "ts_build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReSenpai/farm-game-js-native.git"
+  },
+  "author": "ReSenpai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ReSenpai/farm-game-js-native/issues"
+  },
+  "homepage": "https://github.com/ReSenpai/farm-game-js-native#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.7.2"
+  }
+}

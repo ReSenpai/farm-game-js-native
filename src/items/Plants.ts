@@ -1,6 +1,29 @@
 import { TICK_SIZE } from "../core/config.js";
 
+interface IPlants {
+  image: string;
+  name: string;
+  growthTime: number;
+  resourceCost: number;
+  itemCount: number;
+  resourceMultiplier?: number;
+  maxResources?: number;
+}
+
 export class Plants {
+  public image: string;
+  public name: string;
+  public growthTime: number;
+  public resourceMultiplier: number;
+  public resourceCost: number;
+  public itemCount: number;
+  public timeCounter: number;
+  public resourceCounter: number;
+  public maxResources: number;
+  public timerElement: HTMLSpanElement | null;
+  public waterSaturated: boolean;
+  private timerID: number | null;
+
   constructor({
     image,
     name,
@@ -9,7 +32,7 @@ export class Plants {
     resourceCost,
     itemCount,
     maxResources = 10,
-  }) {
+  }: IPlants) {
     // base parameters
     this.image = image;
     this.name = name;
@@ -26,22 +49,24 @@ export class Plants {
     this.waterSaturated = false;
 
     // private
-    this._timerID = null;
+    this.timerID = null;
   }
 
-  runGrowthTimer = () => {
+  runGrowthTimer = (): void => {
     this.makeGameTick();
-    this._timerID = setInterval(() => {
+    this.timerID = setInterval(() => {
       this.makeGameTick();
     }, TICK_SIZE);
   };
 
-  stopGrowthTimer = () => {
-    clearInterval(this._timerID);
+  stopGrowthTimer = (): void => {
+    if (this.timerID) {
+      clearInterval();
+    }
     this.timerElement = null;
   };
 
-  applyWater = () => {
+  applyWater = (): void => {
     if (this.waterSaturated) {
       return;
     }
@@ -50,8 +75,7 @@ export class Plants {
     this.waterSaturated = true;
   };
 
-  makeGameTick = () => {
-    console.log('plants tick');
+  makeGameTick = (): void => {
     this.updateTimerElement();
 
     if (this.resourceCounter === this.maxResources) {
@@ -65,14 +89,15 @@ export class Plants {
     }
 
     this.timeCounter--;
-    
   };
 
   updateTimerElement = () => {
-    this.timerElement.textContent = this.timeCounter;
-  }
+    if (this.timerElement) {
+      this.timerElement.textContent = this.timeCounter.toString();
+    }
+  };
 
-  _getTimerElements = (size) => {
+  _getTimerElements = (size: number): HTMLSpanElement[] => {
     const timerElement = () => document.createElement("span");
     const result = [];
 
