@@ -8,12 +8,14 @@ export class GameBoard {
   public gameTick: number;
   public elements: HTMLDivElement[];
   public cellsInstances: Cell[];
+  public onSellResources: (value: number) => void;
 
   constructor(size: number = 8, gameTick: number = 1) {
     this.size = size;
     this.gameTick = gameTick;
     this.cellsInstances = [];
     this.elements = [];
+    this.onSellResources = () => {};
     this.create();
   }
 
@@ -39,4 +41,10 @@ export class GameBoard {
       cell.setItem(currentItem);
     });
   };
+
+  public eventInitialization = (): void => {
+    this.cellsInstances.forEach((cell) => {
+      cell.onWriteOffResources = this.onSellResources;
+    });
+  }
 }

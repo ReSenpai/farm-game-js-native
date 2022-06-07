@@ -19,6 +19,15 @@ export class Plants {
             this.resourceMultiplier = this.resourceMultiplier * 1.2;
             this.waterSaturated = true;
         };
+        this.collectResources = () => {
+            let currentResources = this.oldResourceCounter;
+            if (this.oldResourceCounter > 0) {
+                this.oldResourceCounter = 0;
+                this.currentResourceCounter = 0;
+                this.itemElements[1].textContent = `🧱 ${this.oldResourceCounter}`;
+            }
+            return currentResources;
+        };
         this.makeGameTick = () => {
             this.updateElements();
             if (this.oldResourceCounter === this.maxResources) {
@@ -36,9 +45,6 @@ export class Plants {
             if (timerElements) {
                 timerElements.textContent = `⏱ ${this.timeCounter}`;
             }
-            console.log(resourceCountElement);
-            console.log(this.oldResourceCounter === 0 ||
-                this.oldResourceCounter !== this.currentResourceCounter);
             if (resourceCountElement &&
                 (this.oldResourceCounter === 0 ||
                     this.oldResourceCounter !== this.currentResourceCounter)) {
@@ -48,8 +54,8 @@ export class Plants {
         };
         this.setupElements = () => {
             const [timerElements, resourceCountElement] = this.getTimerElements(2);
-            timerElements.classList.add('itemCount');
-            resourceCountElement.classList.add('itemCount');
+            timerElements.classList.add("itemCount");
+            resourceCountElement.classList.add("itemCount");
             this.itemElements.push(timerElements, resourceCountElement);
         };
         this.getTimerElements = (size) => {

@@ -1,23 +1,25 @@
 import { GameBoard } from "../layouts/GameBoard.js";
 import { ItemMenu } from "../layouts/ItemMenu.js";
-import { Plants } from "../items/Plants.js";
+import { ResourcesMenu } from "../layouts/ResourcesMenu.js";
 
 import { CssClasses } from "../models/cssClasses.js";
 import { BOARD_SIZE } from "./config.js";
 
 import { plants } from "../data/plants.js";
-import { ItemID, IPlantsProps } from "../models/items.js";
+import { IPlantsProps } from "../models/items.js";
 
 export class Engine {
   protected root: HTMLElement | null;
   protected board: GameBoard;
   protected itemMenu: ItemMenu;
+  protected resourcesMenu: ResourcesMenu;
   private boardLayout: HTMLDivElement;
   private plants: IPlantsProps[];
 
   constructor(root: HTMLElement | null) {
     this.root = root;
     this.plants = plants;
+    this.resourcesMenu = new ResourcesMenu();
     this.board = new GameBoard(BOARD_SIZE);
     this.itemMenu = new ItemMenu(this.plants);
     this.boardLayout = document.createElement("div");
@@ -39,14 +41,16 @@ export class Engine {
     this.boardLayout.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 1fr)`;
 
     this.boardLayout.append(...this.board.elements);
-    this.root.append(this.boardLayout, this.itemMenu.menu);
+    this.root.append(
+      this.resourcesMenu.menu,
+      this.boardLayout,
+      this.itemMenu.menu
+    );
   };
 
   private eventInitialization = () => {
-    this.itemMenu.onChangeItemMenu = this.handleChangeItemMenu;
-  }
-
-  public handleChangeItemMenu = (id: ItemID) => {
-    this.board.changeItemMenu(id)
-  }
+    this.itemMenu.onChangeItemMenu = this.board.changeItemMenu;
+    this.board.onSellResources = this.resourcesMenu.addGold;
+    this.board.eventInitialization();
+  };
 }

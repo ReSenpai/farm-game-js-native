@@ -22,10 +22,16 @@ export class GameBoard {
                 cell.setItem(currentItem);
             });
         };
+        this.eventInitialization = () => {
+            this.cellsInstances.forEach((cell) => {
+                cell.onWriteOffResources = this.onSellResources;
+            });
+        };
         this.size = size;
         this.gameTick = gameTick;
         this.cellsInstances = [];
         this.elements = [];
+        this.onSellResources = () => { };
         this.create();
     }
 }

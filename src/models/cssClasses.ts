@@ -5,4 +5,5 @@ export enum CssClasses {
   CONTAINER = "container",
   GAME_BOARD = "game-board",
   MENU_ITEM = "menuItem",
+  RESOURCE_ITEM = "resource-item"
 }

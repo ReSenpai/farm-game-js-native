@@ -4,10 +4,11 @@ import { IPlantsProps, ItemID } from "../models/items.js";
 
 export class Cell {
   public element: HTMLDivElement;
-  public selectedItem: Plants | null;
+  public selectedItem: IPlantsProps | null;
   private placedItem: Plants | null;
   public globalTicker: number;
   public currentItemID: ItemID;
+  public onWriteOffResources: (value: number) => void;
 
   constructor() {
     this.element = document.createElement("div");
@@ -15,6 +16,7 @@ export class Cell {
     this.placedItem = null;
     this.globalTicker = 0;
     this.currentItemID = ItemID.Grass;
+    this.onWriteOffResources = () => {};
     this.createCell();
   }
 
@@ -28,8 +30,11 @@ export class Cell {
   };
 
   private handleClick = (): void => {
-    this.clear();
-    this.plant();
+    if (this.placedItem) {
+      this.handleSellResources();
+    } else {
+      this.plant();
+    }
   };
 
   private handleClickContextMenu = (event: MouseEvent): void => {
@@ -39,8 +44,8 @@ export class Cell {
   };
 
   public plant = (): void => {
-    if (this.element && this.selectedItem?.itemElements) {
-      this.placedItem = this.selectedItem;
+    if (this.element && this.selectedItem) {
+      this.placedItem = new Plants(this.selectedItem);
       this.currentItemID = this.placedItem.id;
       this.element.style.backgroundImage = `url(${this.placedItem.image})`;
       this.element.append(...this.placedItem.itemElements);
@@ -53,7 +58,15 @@ export class Cell {
       this.element.style.backgroundImage = `url('../../assets/grass.png')`;
       this.removeAllChildNodes(this.element);
       this.placedItem.clear();
+      this.placedItem = null;
     }
+  };
+
+  public handleSellResources = () => {
+    const currentResourcesCount = this.placedItem?.collectResources() || 0;
+    const currentResourcesCost = this.placedItem?.resourceCost || 0;
+
+    this.onWriteOffResources(currentResourcesCount * currentResourcesCost);
   };
 
   private preventDefaultItemId = () => {
@@ -62,7 +75,7 @@ export class Cell {
 
   public setItem = (item: IPlantsProps | undefined): void => {
     if (item) {
-      this.selectedItem = new Plants(item);
+      this.selectedItem = item;
     }
   };
 

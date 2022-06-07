@@ -6,4 +6,5 @@ export var CssClasses;
     CssClasses["CONTAINER"] = "container";
     CssClasses["GAME_BOARD"] = "game-board";
     CssClasses["MENU_ITEM"] = "menuItem";
+    CssClasses["RESOURCE_ITEM"] = "resource-item";
 })(CssClasses || (CssClasses = {}));

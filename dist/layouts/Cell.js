@@ -11,8 +11,12 @@ export class Cell {
             this.element = cell;
         };
         this.handleClick = () => {
-            this.clear();
-            this.plant();
+            if (this.placedItem) {
+                this.handleSellResources();
+            }
+            else {
+                this.plant();
+            }
         };
         this.handleClickContextMenu = (event) => {
             event.preventDefault();
@@ -20,9 +24,8 @@ export class Cell {
             this.preventDefaultItemId();
         };
         this.plant = () => {
-            var _a;
-            if (this.element && ((_a = this.selectedItem) === null || _a === void 0 ? void 0 : _a.itemElements)) {
-                this.placedItem = this.selectedItem;
+            if (this.element && this.selectedItem) {
+                this.placedItem = new Plants(this.selectedItem);
                 this.currentItemID = this.placedItem.id;
                 this.element.style.backgroundImage = `url(${this.placedItem.image})`;
                 this.element.append(...this.placedItem.itemElements);
@@ -34,14 +37,21 @@ export class Cell {
                 this.element.style.backgroundImage = `url('../../assets/grass.png')`;
                 this.removeAllChildNodes(this.element);
                 this.placedItem.clear();
+                this.placedItem = null;
             }
+        };
+        this.handleSellResources = () => {
+            var _a, _b;
+            const currentResourcesCount = ((_a = this.placedItem) === null || _a === void 0 ? void 0 : _a.collectResources()) || 0;
+            const currentResourcesCost = ((_b = this.placedItem) === null || _b === void 0 ? void 0 : _b.resourceCost) || 0;
+            this.onWriteOffResources(currentResourcesCount * currentResourcesCost);
         };
         this.preventDefaultItemId = () => {
             this.currentItemID = ItemID.Grass;
         };
         this.setItem = (item) => {
             if (item) {
-                this.selectedItem = new Plants(item);
+                this.selectedItem = item;
             }
         };
         this.startGameTick = () => {
@@ -57,6 +67,7 @@ export class Cell {
         this.placedItem = null;
         this.globalTicker = 0;
         this.currentItemID = ItemID.Grass;
+        this.onWriteOffResources = () => { };
         this.createCell();
     }
 }

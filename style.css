@@ -22,7 +22,7 @@ body {
 
 .game-bars {
     height: 100vh;
-    background: wheat;
+    background: rgb(24, 67, 129);
     min-width: 200px;
 }
 
@@ -104,6 +104,10 @@ body {
 .resources-wrapper:hover {
     opacity:0.9;
     background-color:rgb(255, 255, 255);
+}
+
+.resource-item {
+    color: aliceblue;
 }
 /*
     Resource icons
