@@ -1,4 +1,5 @@
 import { Cell } from "./Cell.js";
+import { plants } from "../data/plants.js";
 export class GameBoard {
     constructor(size = 8, gameTick = 1) {
         this.create = () => {
@@ -14,6 +15,12 @@ export class GameBoard {
                     cell.startGameTick();
                 }
             }, 1000 * this.gameTick);
+        };
+        this.changeItemMenu = (itemID) => {
+            this.cellsInstances.forEach((cell) => {
+                const currentItem = plants.find((plant) => plant.id === itemID);
+                cell.setItem(currentItem);
+            });
         };
         this.size = size;
         this.gameTick = gameTick;

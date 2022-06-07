@@ -1,4 +1,7 @@
+import { ItemID } from "../models/items.js";
 import { Cell } from "./Cell.js";
+
+import { plants } from "../data/plants.js";
 
 export class GameBoard {
   public size: number;
@@ -14,7 +17,7 @@ export class GameBoard {
     this.create();
   }
 
-  create = (): void => {
+  private create = (): void => {
     for (let index = 0; index < this.size * this.size; index++) {
       const cell = new Cell();
       this.cellsInstances.push(cell);
@@ -22,11 +25,18 @@ export class GameBoard {
     }
   };
 
-  startGameTicker = (): void => {
+  public startGameTicker = (): void => {
     setInterval(() => {
       for (const cell of this.cellsInstances) {
         cell.startGameTick();
       }
-    }, 1000 * this.gameTick)
-  }
+    }, 1000 * this.gameTick);
+  };
+
+  public changeItemMenu = (itemID: ItemID) => {
+    this.cellsInstances.forEach((cell) => {
+      const currentItem = plants.find((plant) => plant.id === itemID);
+      cell.setItem(currentItem);
+    });
+  };
 }

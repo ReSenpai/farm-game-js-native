@@ -1,59 +1,62 @@
-import { ActionType } from "../models/actions.js";
 import { CssClasses } from "../models/cssClasses.js";
 import { Plants } from "../items/Plants.js";
+import { ItemID } from "../models/items.js";
 export class Cell {
     constructor() {
         this.createCell = () => {
             const cell = document.createElement("div");
             cell.classList.add(CssClasses.CELL, CssClasses.EMPTY_CELL);
             cell.onclick = () => this.handleClick();
+            cell.oncontextmenu = (e) => this.handleClickContextMenu(e);
             this.element = cell;
         };
         this.handleClick = () => {
-            if (this.actionType === ActionType.Clear) {
-                this.actionType = ActionType.Plant;
-            }
-            else {
-                this.actionType = ActionType.Clear;
-            }
-            switch (this.actionType) {
-                case ActionType.Clear:
-                    return this.clear();
-                case ActionType.Plant:
-                    return this.plant();
-                default:
-                    return;
-            }
+            this.clear();
+            this.plant();
+        };
+        this.handleClickContextMenu = (event) => {
+            event.preventDefault();
+            this.clear();
+            this.preventDefaultItemId();
         };
         this.plant = () => {
-            this.currentItem = new Plants({
-                image: "../../assets/wheat.jpg",
-                name: "Пшеница",
-                growthTime: 20,
-                itemCount: 5,
-                resourceCost: 1,
-            });
-            if (this.element && this.currentItem.timerElement) {
-                this.element.style.backgroundImage = `url(${this.currentItem.image})`;
-                this.element.append(this.currentItem.timerElement);
-                this.currentItem.runGrowthTimer();
+            var _a;
+            if (this.element && ((_a = this.selectedItem) === null || _a === void 0 ? void 0 : _a.itemElements)) {
+                this.placedItem = this.selectedItem;
+                this.currentItemID = this.placedItem.id;
+                this.element.style.backgroundImage = `url(${this.placedItem.image})`;
+                this.element.append(...this.placedItem.itemElements);
+                this.placedItem.runGrowthTimer();
             }
         };
         this.clear = () => {
-            if (this.element && this.currentItem && this.currentItem.timerElement) {
+            if (this.element && this.placedItem && this.placedItem.itemElements) {
                 this.element.style.backgroundImage = `url('../../assets/grass.png')`;
-                this.element.removeChild(this.currentItem.timerElement);
-                this.currentItem.stopGrowthTimer();
-                this.currentItem = null;
+                this.removeAllChildNodes(this.element);
+                this.placedItem.clear();
+            }
+        };
+        this.preventDefaultItemId = () => {
+            this.currentItemID = ItemID.Grass;
+        };
+        this.setItem = (item) => {
+            if (item) {
+                this.selectedItem = new Plants(item);
             }
         };
         this.startGameTick = () => {
             this.globalTicker++;
         };
+        this.removeAllChildNodes = (parent) => {
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        };
         this.element = document.createElement("div");
-        this.currentItem = null;
+        this.selectedItem = null;
+        this.placedItem = null;
         this.globalTicker = 0;
-        this.actionType = ActionType.Clear;
+        this.currentItemID = ItemID.Grass;
         this.createCell();
     }
 }

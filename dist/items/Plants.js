@@ -1,17 +1,16 @@
 import { TICK_SIZE } from "../core/config.js";
 export class Plants {
-    constructor({ image, name, growthTime, resourceMultiplier = 1, resourceCost, itemCount, maxResources = 10, }) {
+    constructor({ id, image, name, growthTime, resourceMultiplier = 1, resourceCost, itemCount, maxResources = 10, }) {
         this.runGrowthTimer = () => {
             this.makeGameTick();
             this.timerID = setInterval(() => {
                 this.makeGameTick();
             }, TICK_SIZE);
         };
-        this.stopGrowthTimer = () => {
+        this.clear = () => {
             if (this.timerID) {
-                clearInterval();
+                clearInterval(this.timerID);
             }
-            this.timerElement = null;
         };
         this.applyWater = () => {
             if (this.waterSaturated) {
@@ -21,23 +20,39 @@ export class Plants {
             this.waterSaturated = true;
         };
         this.makeGameTick = () => {
-            this.updateTimerElement();
-            if (this.resourceCounter === this.maxResources) {
+            this.updateElements();
+            if (this.oldResourceCounter === this.maxResources) {
                 return;
             }
             if (!this.timeCounter) {
                 this.timeCounter = this.growthTime;
-                this.resourceCounter++;
+                this.currentResourceCounter++;
                 return;
             }
             this.timeCounter--;
         };
-        this.updateTimerElement = () => {
-            if (this.timerElement) {
-                this.timerElement.textContent = this.timeCounter.toString();
+        this.updateElements = () => {
+            const [timerElements, resourceCountElement] = this.itemElements;
+            if (timerElements) {
+                timerElements.textContent = `⏱ ${this.timeCounter}`;
+            }
+            console.log(resourceCountElement);
+            console.log(this.oldResourceCounter === 0 ||
+                this.oldResourceCounter !== this.currentResourceCounter);
+            if (resourceCountElement &&
+                (this.oldResourceCounter === 0 ||
+                    this.oldResourceCounter !== this.currentResourceCounter)) {
+                this.oldResourceCounter = this.currentResourceCounter;
+                resourceCountElement.textContent = `🧱 ${this.oldResourceCounter}`;
             }
         };
-        this._getTimerElements = (size) => {
+        this.setupElements = () => {
+            const [timerElements, resourceCountElement] = this.getTimerElements(2);
+            timerElements.classList.add('itemCount');
+            resourceCountElement.classList.add('itemCount');
+            this.itemElements.push(timerElements, resourceCountElement);
+        };
+        this.getTimerElements = (size) => {
             const timerElement = () => document.createElement("span");
             const result = [];
             for (let index = 0; index < size; index++) {
@@ -46,6 +61,7 @@ export class Plants {
             return result;
         };
         // base parameters
+        this.id = id;
         this.image = image;
         this.name = name;
         this.growthTime = growthTime;
@@ -53,12 +69,14 @@ export class Plants {
         this.resourceCost = resourceCost;
         this.itemCount = itemCount;
         this.timeCounter = growthTime;
-        this.resourceCounter = 0;
+        this.oldResourceCounter = 0;
+        this.currentResourceCounter = 0;
         this.maxResources = maxResources;
-        this.timerElement = this._getTimerElements(1)[0];
+        this.itemElements = [];
         // statuses
         this.waterSaturated = false;
         // private
         this.timerID = null;
+        this.setupElements();
     }
 }

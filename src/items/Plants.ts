@@ -1,16 +1,8 @@
 import { TICK_SIZE } from "../core/config.js";
-
-interface IPlants {
-  image: string;
-  name: string;
-  growthTime: number;
-  resourceCost: number;
-  itemCount: number;
-  resourceMultiplier?: number;
-  maxResources?: number;
-}
+import { IPlantsProps, ItemID } from "../models/items.js";
 
 export class Plants {
+  public id: ItemID;
   public image: string;
   public name: string;
   public growthTime: number;
@@ -18,13 +10,15 @@ export class Plants {
   public resourceCost: number;
   public itemCount: number;
   public timeCounter: number;
-  public resourceCounter: number;
+  public currentResourceCounter: number;
+  public oldResourceCounter: number;
   public maxResources: number;
-  public timerElement: HTMLSpanElement | null;
+  public itemElements: HTMLSpanElement[];
   public waterSaturated: boolean;
   private timerID: number | null;
 
   constructor({
+    id,
     image,
     name,
     growthTime,
@@ -32,8 +26,9 @@ export class Plants {
     resourceCost,
     itemCount,
     maxResources = 10,
-  }: IPlants) {
+  }: IPlantsProps) {
     // base parameters
+    this.id = id;
     this.image = image;
     this.name = name;
     this.growthTime = growthTime;
@@ -41,32 +36,33 @@ export class Plants {
     this.resourceCost = resourceCost;
     this.itemCount = itemCount;
     this.timeCounter = growthTime;
-    this.resourceCounter = 0;
+    this.oldResourceCounter = 0;
+    this.currentResourceCounter = 0;
     this.maxResources = maxResources;
-    this.timerElement = this._getTimerElements(1)[0];
+    this.itemElements = [];
 
     // statuses
     this.waterSaturated = false;
 
     // private
     this.timerID = null;
+    this.setupElements();
   }
 
-  runGrowthTimer = (): void => {
+  public runGrowthTimer = (): void => {
     this.makeGameTick();
     this.timerID = setInterval(() => {
       this.makeGameTick();
     }, TICK_SIZE);
   };
 
-  stopGrowthTimer = (): void => {
+  public clear = (): void => {
     if (this.timerID) {
-      clearInterval();
-    }
-    this.timerElement = null;
+      clearInterval(this.timerID);
+    }    
   };
 
-  applyWater = (): void => {
+  public applyWater = (): void => {
     if (this.waterSaturated) {
       return;
     }
@@ -75,29 +71,54 @@ export class Plants {
     this.waterSaturated = true;
   };
 
-  makeGameTick = (): void => {
-    this.updateTimerElement();
+  public makeGameTick = (): void => {
+    this.updateElements();
 
-    if (this.resourceCounter === this.maxResources) {
+    if (this.oldResourceCounter === this.maxResources) {
       return;
     }
 
     if (!this.timeCounter) {
       this.timeCounter = this.growthTime;
-      this.resourceCounter++;
+      this.currentResourceCounter++;
       return;
     }
 
     this.timeCounter--;
   };
 
-  updateTimerElement = () => {
-    if (this.timerElement) {
-      this.timerElement.textContent = this.timeCounter.toString();
+  public updateElements = () => {
+    const [timerElements, resourceCountElement] = this.itemElements;
+
+    if (timerElements) {
+      timerElements.textContent = `⏱ ${this.timeCounter}`;
+    }
+
+    console.log(resourceCountElement);
+    console.log(
+      this.oldResourceCounter === 0 ||
+        this.oldResourceCounter !== this.currentResourceCounter
+    );
+
+    if (
+      resourceCountElement &&
+      (this.oldResourceCounter === 0 ||
+        this.oldResourceCounter !== this.currentResourceCounter)
+    ) {
+      this.oldResourceCounter = this.currentResourceCounter;
+      resourceCountElement.textContent = `🧱 ${this.oldResourceCounter}`;
     }
   };
 
-  _getTimerElements = (size: number): HTMLSpanElement[] => {
+  private setupElements = () => {
+    const [timerElements, resourceCountElement] = this.getTimerElements(2);
+    timerElements.classList.add('itemCount');
+    resourceCountElement.classList.add('itemCount');
+
+    this.itemElements.push(timerElements, resourceCountElement);
+  };
+
+  private getTimerElements = (size: number): HTMLSpanElement[] => {
     const timerElement = () => document.createElement("span");
     const result = [];
 

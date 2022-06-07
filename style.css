@@ -43,7 +43,7 @@ body {
     cursor: pointer;
     border: 1px black solid;
     transition: .15s;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
 }
 .cell:hover {
@@ -51,8 +51,8 @@ body {
     background-color:#000;
 }
 
-.plantingMenu {
-    background-size: contain;
+.menuItem {
+    background-size: cover;
     cursor: pointer;
     border: 5px transparent solid;
     border-radius: 5px;
@@ -60,10 +60,18 @@ body {
     height: 100px;
     margin: 30px;
     transition: .15s;
+    color: aliceblue;
 }
-.plantingMenu:hover {
+.menuItem:hover {
     opacity:0.6;
     background-color:#000;
+}
+
+.itemCount {
+    width: fit-content;
+    padding: 4px;
+    background-color: rgba(240, 248, 255, 0.518);
+    border-radius: 4px;
 }
 
 .plantingMenu-active {
