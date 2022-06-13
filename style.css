@@ -51,14 +51,18 @@ body {
     background-color:#000;
 }
 
+.menuItemsWrapper {
+    display: flex;
+}
+
 .menuItem {
     background-size: cover;
     cursor: pointer;
-    border: 5px transparent solid;
-    border-radius: 5px;
-    width: 100px;
-    height: 100px;
-    margin: 30px;
+    border: 1px transparent solid;
+    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    margin: 4px;
     transition: .15s;
     color: aliceblue;
 }
@@ -129,4 +133,33 @@ body {
 }
 .golds {
     background-image: url('./assets/gold.png');
+}
+
+/* Item description  */
+
+.item_description__wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    width: 250px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: blueviolet;
+    padding: 4px;
+}
+
+.item_description__name {
+    text-align: center;
+    font-family: monospace;
+    color: aliceblue;
+}
+
+.item_description__image {
+    flex: 1;
+    overflow: hidden;
+}
+
+.item_description__text {
+    font-family: monospace;
+    color: aliceblue;
 }

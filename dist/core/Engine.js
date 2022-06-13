@@ -7,6 +7,7 @@ import { plants } from "../data/plants.js";
 export class Engine {
     constructor(root) {
         this.start = () => {
+            this.itemMenu.menuInitialization();
             this.render();
             this.eventInitialization();
         };

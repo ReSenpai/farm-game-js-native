@@ -1,6 +1,6 @@
 import { TICK_SIZE } from "../core/config.js";
 export class Plants {
-    constructor({ id, image, name, growthTime, resourceMultiplier = 1, resourceCost, itemCount, maxResources = 10, }) {
+    constructor({ id, image, artImage, name, description, growthTime, resourceMultiplier = 1, resourceCost, itemCount, maxResources = 10, }) {
         this.runGrowthTimer = () => {
             this.makeGameTick();
             this.timerID = setInterval(() => {
@@ -69,7 +69,9 @@ export class Plants {
         // base parameters
         this.id = id;
         this.image = image;
+        this.artImage = artImage;
         this.name = name;
+        this.description = description;
         this.growthTime = growthTime;
         this.resourceMultiplier = resourceMultiplier;
         this.resourceCost = resourceCost;

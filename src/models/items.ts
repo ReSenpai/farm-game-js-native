@@ -9,7 +9,9 @@ export enum ItemID {
 export interface IPlantsProps {
   id: ItemID;
   image: string;
+  artImage: string;
   name: string;
+  description: string;
   growthTime: number;
   resourceCost: number;
   itemCount: number;

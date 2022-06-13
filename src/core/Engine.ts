@@ -26,6 +26,7 @@ export class Engine {
   }
 
   public start = (): void => {
+    this.itemMenu.menuInitialization();
     this.render();
     this.eventInitialization();
   };

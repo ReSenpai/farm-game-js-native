@@ -4,7 +4,9 @@ import { IPlantsProps, ItemID } from "../models/items.js";
 export class Plants {
   public id: ItemID;
   public image: string;
+  public artImage: string;
   public name: string;
+  public description: string;
   public growthTime: number;
   public resourceMultiplier: number;
   public resourceCost: number;
@@ -20,7 +22,9 @@ export class Plants {
   constructor({
     id,
     image,
+    artImage,
     name,
+    description,
     growthTime,
     resourceMultiplier = 1,
     resourceCost,
@@ -30,7 +34,9 @@ export class Plants {
     // base parameters
     this.id = id;
     this.image = image;
+    this.artImage = artImage
     this.name = name;
+    this.description = description;
     this.growthTime = growthTime;
     this.resourceMultiplier = resourceMultiplier;
     this.resourceCost = resourceCost;
